@@ -5,6 +5,7 @@ Puppet::Reports.register_report(:reportlog) do
     the log destination is syslog."
 
   def process
+    prefix_msg = "[reportlog] node=#{self.host} ver=\"#{self.configuration_version.to_s}\" "
     self.metrics.each do |category,data|
       data.values.each do |val|
         metric = val[1]
@@ -16,7 +17,10 @@ Puppet::Reports.register_report(:reportlog) do
           units = category
         end
 
-        Puppet.info("[reportlog] category=\"#{category}\" metric=\"#{metric}\" units=\"#{units}\" value=\"#{value}\"")
+        msg = prefix_msg + 'category="%s" metric="%s" value="%s" units="%s"' %
+              [category, metric, value, units]
+
+        Puppet.info(msg)
       end
     end
   end
