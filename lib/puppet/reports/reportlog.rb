@@ -1,19 +1,13 @@
-require 'puppet'
-Puppet::Reports.register_report(:reportlog) do
-  desc <<-DESC
-  Logs more useful information than the default 'log' report, such as metrics.
-DESC
+require 'puppet/reports'
+
+Puppet::Reports.register_report(:log) do
+  desc "Send all received logs to the local log destinations.  Usually
+    the log destination is syslog."
 
   def process
-    client = self.host
-    logs = self.logs
-    config_version = self.configuration_version
-    dir = File.join(Puppet[:reportdir], client)
-    Dir.mkdir(dir) unless File.exists?(dir)
-    file = config_version + ".logs"
-    destination = File.join(dir, file)
-    File.open(destination,"w") do |f|
-      f.write(logs)
+    self.logs.each do |log|
+      log.source = "//#{self.host}/#{log.source} [reportlog]"
+      Puppet::Util::Log.newmessage(log)
     end
   end
 end
