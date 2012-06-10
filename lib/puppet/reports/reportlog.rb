@@ -5,12 +5,8 @@ Puppet::Reports.register_report(:reportlog) do
     the log destination is syslog."
 
   def process
-    self.logs.each do |log|
-      log.source = "//#{self.host}/#{log.source} [reportlog]"
-      Puppet::Util::Log.newmessage(log)
-    end
     self.metrics.each do |metric,data|
-      Puppet.info("[reportlog] metric=#{metric}")
+      Puppet.info("[reportlog] metric=#{metric} data=\"#{data.to_yaml}\"")
     end
   end
 end
