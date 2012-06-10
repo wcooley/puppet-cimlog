@@ -10,7 +10,7 @@ Puppet::Reports.register_report(:reportlog) do
       Puppet::Util::Log.newmessage(log)
     end
     self.metrics.each do |metric,data|
-      Puppet.info("metric=#{metric}")
+      Puppet.info("[reportlog] metric=#{metric}")
     end
   end
 end
