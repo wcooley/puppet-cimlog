@@ -7,9 +7,10 @@ DESC
   def process
     dir = File.join(Puppet[:reportdir], self.host)
     Dir.mkdir(dir) unless File.exists?(dir)
-    file = config_version + ".logs"
+    file = self.config_version + ".logs"
     destination = File.join(dir, file)
     File.open(destination,"w") do |f|
+      Puppet::Util::Log.newmessage("reportlog: writing to #{destination}")
 #      f.write(logs)
       self.metrics.each do |name, metric|
         f.puts("name=#{name} metric=#{metric}")
