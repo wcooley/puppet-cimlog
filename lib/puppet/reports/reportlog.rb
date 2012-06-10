@@ -9,6 +9,9 @@ Puppet::Reports.register_report(:reportlog) do
       log.source = "//#{self.host}/#{log.source} [reportlog]"
       Puppet::Util::Log.newmessage(log)
     end
+    self.metrics.each do |metric,data|
+      Puppet.info("metric=#{metric}")
+    end
   end
 end
 
