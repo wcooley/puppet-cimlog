@@ -5,8 +5,19 @@ Puppet::Reports.register_report(:reportlog) do
     the log destination is syslog."
 
   def process
-    self.metrics.each do |metric,data|
-      Puppet.info("[reportlog] metric=#{metric} data=\"#{data.to_yaml}\"")
+    self.metrics.each do |category,data|
+      data.values.each do |val|
+        metric = val[1]
+        value = val[2]
+
+        if category == 'time'
+          units = 'seconds'
+        else
+          units = category
+        end
+
+        Puppet.info("[reportlog] category=\"#{category}\" metric=\"#{metric}\" units=\"#{units}\" value=\"#{value}\"")
+      end
     end
   end
 end
