@@ -12,9 +12,9 @@ DESC
     File.open(destination,"w") do |f|
       Puppet::Util::Log.newmessage("reportlog: writing to #{destination}")
 #      f.write(logs)
-      self.metrics.each do |name, metric|
-        f.puts("name=#{name} metric=#{metric}")
-      end
+#      self.metrics.each do |name, metric|
+#        f.puts("name=#{name} metric=#{metric}")
+#      end
     end
 #    File.open('/tmp/puppet-reportlog.log', 'w') do |f|
 #    end
