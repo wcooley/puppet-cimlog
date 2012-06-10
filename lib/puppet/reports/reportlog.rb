@@ -10,7 +10,8 @@ Puppet::Reports.register_report(:reportlog) do
 
     self.metrics.each do |category,data|
 
-      msg = prefix_msg
+      msg = Array.new
+      msg += [ prefix_msg ]
       msg += [ 'category="%s"' % category ]
 
       if category == 'time'
