@@ -5,19 +5,16 @@ Puppet::Reports.register_report(:reportlog) do
 DESC
 
   def process
-    dir = File.join(Puppet[:reportdir], self.host)
+    client = self.host
+    logs = self.logs
+    config_version = self.configuration_version
+    dir = File.join(Puppet[:reportdir], client)
     Dir.mkdir(dir) unless File.exists?(dir)
-    file = self.configuration_version + ".logs"
+    file = config_version + ".logs"
     destination = File.join(dir, file)
     File.open(destination,"w") do |f|
-      Puppet::Util::Log.newmessage("reportlog: writing to #{destination}")
-#      f.write(logs)
-#      self.metrics.each do |name, metric|
-#        f.puts("name=#{name} metric=#{metric}")
-#      end
+      f.write(logs)
     end
-#    File.open('/tmp/puppet-reportlog.log', 'w') do |f|
-#    end
   end
 end
 
