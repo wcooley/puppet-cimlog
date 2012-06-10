@@ -5,7 +5,7 @@ Puppet::Reports.register_report(:reportlog) do
 DESC
 
   def process
-    File.open('/tmp/puppet-reportlog.log') do |f|
+    File.open('/tmp/puppet-reportlog.log', 'w') do |f|
       self.metrics.each do |name, metric|
         f.puts("name=#{name} metric=#{metric}")
       end
