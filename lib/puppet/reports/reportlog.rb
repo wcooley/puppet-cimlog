@@ -1,27 +1,30 @@
 require 'puppet/reports'
 
 Puppet::Reports.register_report(:reportlog) do
-  desc "Send all received logs to the local log destinations.  Usually
-    the log destination is syslog."
+  desc "Send metrics to log, structured to make it easy with Splunk."
 
   def process
-    prefix_msg = "[reportlog] node=#{self.host} ver=\"#{self.configuration_version.to_s}\" "
+    node = self.host.split('.', 2)[0]
+
+    prefix_msg = "[reportlog] node=#{node} ver=\"#{self.configuration_version.to_s}\""
+
     self.metrics.each do |category,data|
-      data.values.each do |val|
-        metric = val[1]
-        value = val[2]
 
-        if category == 'time'
-          units = 'seconds'
-        else
-          units = category
-        end
+      msg = prefix_msg
+      msg += [ 'category="%s"' % category ]
 
-        msg = prefix_msg + 'category="%s" metric="%s" value="%s" units="%s"' %
-              [category, metric, value, units]
-
-        Puppet.info(msg)
+      if category == 'time'
+        msg += [ 'units="seconds"' ]
       end
+
+      msg += data.values.map do |val|
+        metric = val[1].downcase.tr(' ', '_')
+        value = val[2].to_s
+
+        '%s="%s"' % [metric, value]
+      end
+
+      Puppet.info(msg.join(' '))
     end
   end
 end
