@@ -63,17 +63,17 @@ Puppet::Reports.register_report(:cimlog) do
                       resource="#{res.resource}"
                       resource_title="#{res.title}"
                       resource_type="#{res.resource_type}"
-                      resource_events="#{res.events.length}"
+                      resource_changes="#{res.events.length}"
                     })
 
       res.events.each do |event|
         Puppet.notice(@prefix_msg, %W{
                       resource="#{res.resource}"
-                      event_name="#{event.name}"
-                      event_property="#{event.property}"
-                      event_status="#{event.status}"
-                      desired_value="#{event.desired_value}"
-                      previous_value="#{event.previous_value}"
+                      change_type="#{event.name}"
+                      change_property="#{event.property}"
+                      change_status="#{event.status}"
+                      change_previous="#{event.previous_value}"
+                      change_desired="#{event.desired_value}"
                     })
                       
       end
