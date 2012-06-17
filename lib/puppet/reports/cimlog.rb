@@ -1,12 +1,12 @@
 require 'puppet/reports'
 
-Puppet::Reports.register_report(:reportlog) do
+Puppet::Reports.register_report(:cimlog) do
   desc "Send metrics to log, structured to make it easy with Splunk."
 
   def process
     node = self.host.split('.', 2)[0]
 
-    prefix_msg = "[reportlog] node=#{node} ver=\"#{self.configuration_version.to_s}\""
+    prefix_msg = "[cimlog] node=#{node} ver=\"#{self.configuration_version.to_s}\""
 
     self.metrics.each do |category,data|
 
