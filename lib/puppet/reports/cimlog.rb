@@ -14,7 +14,7 @@ Puppet::Reports.register_report(:cimlog) do
     @node = self.host.split('.', 2)[0]
     @run_id = Time.now.to_i.to_s if not @run_id
 
-    @prefix_msg = "[cimlog] node=#{@node} id=#{@run_id}"
+    @prefix_msg = "[cimlog] dest=#{@node} event_id=#{@run_id}"
     Puppet.notice(@prefix_msg, %W{
                   ver="#{self.configuration_version.to_s}"
                   kind="#{self.kind}"
