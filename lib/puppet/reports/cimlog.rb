@@ -6,7 +6,7 @@ Puppet::Reports.register_report(:cimlog) do
   def process
     cimlog_base
     cimlog_metrics
-#    cimlog_logs
+    cimlog_logs
     cimlog_resource_statuses
   end
 
