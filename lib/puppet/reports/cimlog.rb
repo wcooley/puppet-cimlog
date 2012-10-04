@@ -39,6 +39,9 @@ Puppet::Reports.register_report(:cimlog) do
 
       if category == 'time'
         msg += [ 'units="seconds"' ]
+        metric_prefix = 'rtime_'
+      else
+        metric_prefix = ''
       end
 
       msg += data.values.map do |val|
@@ -46,7 +49,7 @@ Puppet::Reports.register_report(:cimlog) do
         value = val[2].to_s
 
         if metric != 'total'
-          metric = 'rtime_' + metric
+          metric = metric_prefix + metric
         end
 
         '%s="%s"' % [metric, value]
