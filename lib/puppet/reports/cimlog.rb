@@ -46,13 +46,17 @@ Puppet::Reports.register_report(:cimlog) do
 
       msg += data.values.map do |val|
         metric = val[1].downcase.tr(' ', '_')
-        value = val[2].to_s
+        value = val[2]
+
+        if category == 'time'
+          value = sprintf("%0.3f", value)
+        end
 
         if metric != 'total'
           metric = metric_prefix + metric
         end
 
-        '%s="%s"' % [metric, value]
+        '%s="%s"' % [metric, value.to_s]
       end
 
       Puppet.notice(msg)
