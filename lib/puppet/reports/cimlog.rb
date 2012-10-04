@@ -10,7 +10,7 @@ Puppet::Reports.register_report(:cimlog) do
     cimlog_resource_statuses
   end
 
-  def prefix_msg(p=undef)
+  def prefix_msg(p=nil)
     if p
       prefix = "[cimlog/#{p}]"
     else
