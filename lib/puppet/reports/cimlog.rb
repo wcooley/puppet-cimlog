@@ -10,12 +10,22 @@ Puppet::Reports.register_report(:cimlog) do
     cimlog_resource_statuses
   end
 
-  def cimlog_base
-    @node = self.host.split('.', 2)[0]
+  def prefix_msg(p=undef)
+    if p
+      prefix = "[cimlog/#{p}]"
+    else
+      prefix = "[cimlog]"
+    end
+
+    @node = self.host.split('.', 2)[0] if not @node
     @run_id = Time.now.to_i.to_s if not @run_id
 
+    [prefix, "dest=#{@node}", "event_id=#{@run_id}"]
+  end
+
+  def cimlog_base
     @prefix_msg = "[cimlog] dest=#{@node} event_id=#{@run_id}"
-    Puppet.notice(@prefix_msg, %W{
+    Puppet.notice(self.prefix_msg, %W{
                   ver="#{self.configuration_version.to_s}"
                   kind="#{self.kind}"
                   status="#{self.status}"
@@ -25,9 +35,7 @@ Puppet::Reports.register_report(:cimlog) do
   def cimlog_metrics
     self.metrics.each do |category,data|
 
-      msg = Array.new
-      msg += [ @prefix_msg ]
-      msg += [ 'category="%s"' % category ]
+      msg = [ self.prefix_msg('metrics'), 'category="%s"' % category ]
 
       if category == 'time'
         msg += [ 'units="seconds"' ]
@@ -50,7 +58,7 @@ Puppet::Reports.register_report(:cimlog) do
 
   def cimlog_logs
     self.logs.each do |log|
-      Puppet.notice(@prefix_msg, %W{
+      Puppet.notice(self.prefix_msg('logs'), %W{
                     source="#{log.source}"
                     level="#{log.level}"
                     msg="#{log.to_s}"
@@ -63,7 +71,7 @@ Puppet::Reports.register_report(:cimlog) do
 
     resources.each do |res|
 
-      Puppet.notice(@prefix_msg, %W{
+      Puppet.notice(self.prefix_msg('resource'), %W{
                       resource="#{res.resource}"
                       resource_title="#{res.title}"
                       resource_type="#{res.resource_type}"
@@ -71,7 +79,7 @@ Puppet::Reports.register_report(:cimlog) do
                     })
 
       res.events.each do |event|
-        Puppet.notice(@prefix_msg, %W{
+        Puppet.notice(self.prefix_msg('change'), %W{
                       resource="#{res.resource}"
                       change_type="#{event.name}"
                       change_property="#{event.property}"
