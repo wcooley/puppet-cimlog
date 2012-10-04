@@ -37,6 +37,10 @@ Puppet::Reports.register_report(:cimlog) do
         metric = val[1].downcase.tr(' ', '_')
         value = val[2].to_s
 
+        if metric != 'total'
+          metric = 'rtime_' + metric
+        end
+
         '%s="%s"' % [metric, value]
       end
 
