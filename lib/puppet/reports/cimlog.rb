@@ -46,7 +46,7 @@ Puppet::Reports.register_report(:cimlog) do
 
   def cimlog_base
     @prefix_msg = "[cimlog] dest=#{@node} event_id=#{@run_id}"
-    Puppet.notice(self.prefix_msg, %W{
+    Puppet.notice([self.prefix_msg] + %W{
                   ver="#{self.configuration_version.to_s}"
                   kind="#{self.kind}"
                   status="#{self.status}"
@@ -86,7 +86,7 @@ Puppet::Reports.register_report(:cimlog) do
 
   def cimlog_logs
     self.logs.each do |log|
-      Puppet.notice(self.prefix_msg('logs'), %W{
+      Puppet.notice([self.prefix_msg('logs')] + %W{
                     source="#{log.source}"
                     level="#{log.level}"
                     msg="#{log.to_s}"
@@ -99,7 +99,7 @@ Puppet::Reports.register_report(:cimlog) do
 
     resources.each do |res|
 
-      Puppet.notice(self.prefix_msg('resource'), %W{
+      Puppet.notice([self.prefix_msg('resource')] + %W{
                       resource="#{res.resource}"
                       resource_title="#{res.title}"
                       resource_type="#{res.resource_type}"
@@ -107,7 +107,7 @@ Puppet::Reports.register_report(:cimlog) do
                     })
 
       res.events.each do |event|
-        Puppet.notice(self.prefix_msg('change'), %W{
+        Puppet.notice([self.prefix_msg('change')] + %W{
                       resource="#{res.resource}"
                       change_type="#{event.name}"
                       change_property="#{event.property}"
