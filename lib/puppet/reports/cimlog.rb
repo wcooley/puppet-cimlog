@@ -86,10 +86,18 @@ Puppet::Reports.register_report(:cimlog) do
 
   def cimlog_logs
     self.logs.each do |log|
+
+      # Truncate long messages to ensure the quote closes. 250 should be
+      # enough; it's somewhat arbitrarily chosen.
+      msg = log.to_s
+      if msg.length > 250 then
+        msg = msg[0,250] + '...'
+      end
+
       Puppet.notice([self.prefix_msg('logs')] + %W{
                     source="#{log.source}"
                     level="#{log.level}"
-                    msg="#{log.to_s}"
+                    msg="#{msg}"
                   })
     end
   end
