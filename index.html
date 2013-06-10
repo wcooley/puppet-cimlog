@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="puppet-cimlog_report : Puppet report processor providing CIM-like logging. " />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>puppet-cimlog_report</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/wcooley/puppet-cimlog">View on GitHub</a>
+
+          <h1 id="project_title">puppet-cimlog_report</h1>
+          <h2 id="project_tagline">Puppet report processor providing CIM-like logging. </h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/wcooley/puppet-cimlog/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/wcooley/puppet-cimlog/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="puppet-cimlog" class="anchor" href="#puppet-cimlog"><span class="octicon octicon-link"></span></a>puppet-cimlog</h1>
+
+<h2>
+<a name="description" class="anchor" href="#description"><span class="octicon octicon-link"></span></a>Description</h2>
+
+<p>CIM Log is a Puppet report processor that formats report data as field=value
+pairs and logs over syslog, so Splunk can automatically extract fields. This is
+being designed for use with my <a href="https://github.com/wcooley/splunk-puppet">Puppet
+Pulse</a> App for Splunk, so its output
+will change to meet the needs of that.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>To use, check out or download into your Puppet modules directory or install using the Puppet module tool. <code>puppet.conf</code> needs the following:</p>
+
+<ul>
+<li>pluginsync enabled</li>
+<li>agent configured to send reports</li>
+<li>master configured with <code>cimlog</code> as a report processor</li>
+</ul><p>My <code>puppet.conf</code> looks something like this:</p>
+
+<pre><code>[main]
+pluginsync = true
+
+[agent]
+report = true
+
+[master]
+reports = cimlog
+</code></pre>
+
+<h2>
+<a name="output" class="anchor" href="#output"><span class="octicon octicon-link"></span></a>Output</h2>
+
+<p>Some sample anonymized output:</p>
+
+<pre><code>masterofpuppets puppet-master[17621]: [cimlog] dest=puppetclient event_id=1370889076 ver="1370862162" kind="apply" status="changed"
+masterofpuppets puppet-master[17621]: [cimlog/metrics] dest=puppetclient event_id=1370889076 category="changes" total="6"
+masterofpuppets puppet-master[17621]: [cimlog/metrics] dest=puppetclient event_id=1370889076 category="time" units="seconds" rtime_augeas="7.186" rtime_config_retrieval="5.346" rtime_cron="0.003" rtime_exec="10.949" rtime_file="4.121" rtime_file_line="0.001" rtime_filebucket="0.001" rtime_group="0.025" rtime_host="0.002" rtime_package="0.861" rtime_service="6.153" total="35.042" rtime_user="0.042" rtime_vcsrepo="0.330" rtime_yumrepo="0.024"
+masterofpuppets puppet-master[17621]: [cimlog/metrics] dest=puppetclient event_id=1370889076 category="resources" changed="6" failed="0" failed_to_restart="0" out_of_sync="6" restarted="0" scheduled="0" skipped="7" total="764"
+masterofpuppets puppet-master[17621]: [cimlog/metrics] dest=puppetclient event_id=1370889076 category="events" failure="0" success="6" total="6"
+masterofpuppets puppet-master[17621]: [cimlog/logs] dest=puppetclient event_id=1370889076 source="/Stage[main]/Host_puppetclient/Exec[update_generated_foo]/returns" level="notice" msg="executed successfully"
+masterofpuppets puppet-master[17621]: [cimlog/logs] dest=puppetclient event_id=1370889076 source="/Stage[main]/Puppet::Master::Hacks/Cfengine_conf[etc/foo.conf]/File[/etc/puppet/modules/foo/files/foo.conf]/content" level="notice" msg="content changed '{md5}0c96ce187f3184d4bf3d9ade7f50a7f1' to '{md5}baaa5134a6f497348a3236416b24105a'"
+masterofpuppets puppet-master[17621]: [cimlog/logs] dest=puppetclient event_id=1370889076 source="Puppet" level="notice" msg="Finished catalog run in 43.47 seconds"
+masterofpuppets puppet-master[17621]: [cimlog/resource] dest=puppetclient event_id=1370889076 resource="File[/etc/puppet/modules/foo/files/foo.conf]" resource_title="/etc/puppet/modules/foo/files/foo.conf" resource_type="File" resource_changes="1"
+masterofpuppets puppet-master[17621]: [cimlog/change] dest=puppetclient event_id=1370889076 resource="File[/etc/puppet/modules/foo/files/foo.conf]" change_type="content_changed" change_property="content" change_status="success" change_previous="{md5}0c96ce187f3184d4bf3d9ade7f50a7f1" change_desired="{md5}baaa5134a6f497348a3236416b24105a"
+masterofpuppets puppet-master[17621]: [cimlog/resource] dest=puppetclient event_id=1370889076 resource="Exec[update_generated_foo]" resource_title="update_generated_foo" resource_type="Exec" resource_changes="1"
+masterofpuppets puppet-master[17621]: [cimlog/change] dest=puppetclient event_id=1370889076 resource="Exec[update_generated_foo]" change_type="executed_command" change_property="returns" change_status="success" change_previous="notrun" change_desired="0"
+</code></pre>
+
+<h2>
+<a name="author" class="anchor" href="#author"><span class="octicon octicon-link"></span></a>Author</h2>
+
+<p>Wil Cooley </p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<pre><code>Author:: Wil Cooley (wcooley(at)nakedape.cc)
+Copyright:: Copyright (c) 2013 Wil Cooley
+License:: Apache License, Version 2.0
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+</code></pre>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">puppet-cimlog_report maintained by <a href="https://github.com/wcooley">wcooley</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
